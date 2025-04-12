@@ -2,6 +2,7 @@ import UserModel from "../models/user.model.js";
 import { validationResult } from "express-validator";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
+import BlacklistToken from "../models/blacklistToken.model.js";
 
 export const registerUser = async (req, res, next) => {
     const errors = validationResult(req);
@@ -54,8 +55,8 @@ export const loginUser = async (req, res, next) => {
         return res.status(401).json({ success: false, message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ _id: userMatch._id }, process.env.JWT_SECRET)
-
+    const token = jwt.sign({ _id: userMatch._id }, process.env.JWT_SECRET, { expiresIn: "24h" })
+    res.cookie("token", token)
     res.status(200).json({
         token, userMatch: {
             fullName: userMatch.fullName,
@@ -64,4 +65,16 @@ export const loginUser = async (req, res, next) => {
             __v: userMatch.__v
         }
     });
+}
+
+export const getUserProfile = (req, res, next) => {
+    res.status(200).json({ user: req.user });
+}
+
+export const logoutUser = async (req, res, next) => {
+    res.clearCookie("token")
+    const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+    await BlacklistToken.create({ token });
+    res.status(200).json({ message: "Logout success" })
+
 }

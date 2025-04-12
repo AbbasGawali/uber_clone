@@ -165,3 +165,90 @@ Example:
       "message": "Internal Server Error"
     }
     ```
+
+## Endpoint: `/api/v1/users/profile`
+
+### Description
+This endpoint is used to retrieve the profile of the currently authenticated user.
+
+### Method
+`GET`
+
+### Headers
+- `Authorization` (string, required): The Bearer token for the authenticated user.
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**:
+  ```json
+  {
+    "user": {
+      "_id": "user_id_here",
+      "fullName": {
+        "firstName": "John",
+        "lastName": "Doe"
+      },
+      "email": "john.doe@example.com"
+    }
+  }
+  ```
+
+#### Errors
+- **Status Code**: `401 Unauthorized`
+  - **Response Body**:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+- **Status Code**: `500 Internal Server Error`
+  - **Response Body**:
+    ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
+
+---
+
+## Endpoint: `/api/v1/users/logout`
+
+### Description
+This endpoint is used to log out the currently authenticated user.
+
+### Method
+`GET`
+
+### Headers
+- `Authorization` (string, required): The Bearer token for the authenticated user.
+
+### Responses
+
+#### Success
+- **Status Code**: `200 OK`
+- **Response Body**:
+  ```json
+  {
+    "message": "Logout success"
+  }
+  ```
+
+#### Errors
+- **Status Code**: `401 Unauthorized`
+  - **Response Body**:
+    ```json
+    {
+      "message": "Unauthorized"
+    }
+    ```
+
+- **Status Code**: `500 Internal Server Error`
+  - **Response Body**:
+    ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
