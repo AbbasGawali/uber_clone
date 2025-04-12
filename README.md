@@ -252,3 +252,132 @@ This endpoint is used to log out the currently authenticated user.
       "message": "Internal Server Error"
     }
     ```
+
+    
+    
+## Endpoint: `/api/v1/captains/register`
+
+### Description
+This endpoint is used to register a new captain.
+
+### Method
+`POST`
+
+### Request Body
+The request body should be a JSON object containing the following fields:
+
+- `fullName`: An object containing:
+  - `firstName` (string, required): The first name of the captain. Must be at least 3 characters long.
+  - `lastName` (string, optional): The last name of the captain. Must be at least 3 characters long if provided.
+- `email` (string, required): The email address of the captain. Must be a valid email format.
+- `password` (string, required): The password for the captain. Must be at least 3 characters long.
+- `vehicle`: An object containing:
+  - `color` (string, required): The color of the vehicle. Must be at least 3 characters long.
+  - `plate` (string, required): The license plate of the vehicle. Must be unique and at least 3 characters long.
+  - `capacity` (number, required): The capacity of the vehicle. Must be a number and at least 1.
+  - `type` (string, required): The type of the vehicle. Must be one of the following: `car`, `motorcycle`, `auto`.
+
+Example:
+```json
+{
+  "fullName": {
+    "firstName": "Jane",
+    "lastName": "Doe"
+  },
+  "email": "jane.doe@example.com",
+  "password": "password123",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "type": "car"
+  }
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: `201 Created`
+- **Response Body**:
+  ```json
+  {
+    "success": true,
+    "token": "jwt_token_here",
+    "captain": {
+      "_id": "captain_id_here",
+      "fullName": {
+        "firstName": "Jane",
+        "lastName": "Doe"
+      },
+      "email": "jane.doe@example.com",
+      "vehicle": {
+        "color": "Red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "type": "car"
+      },
+      "status": "inactive"
+    }
+  }
+  ```
+
+#### Errors
+- **Status Code**: `400 Bad Request`
+  - **Response Body** (Validation Errors):
+    ```json
+    {
+      "errors": [
+        {
+          "msg": "Invalid Email",
+          "param": "email",
+          "location": "body"
+        },
+        {
+          "msg": "firstName must be at least 3 characters",
+          "param": "fullName.firstName",
+          "location": "body"
+        },
+        {
+          "msg": "password must be at least 3 characters",
+          "param": "password",
+          "location": "body"
+        },
+        {
+          "msg": "color must be at least 3 characters",
+          "param": "vehicle.color",
+          "location": "body"
+        },
+        {
+          "msg": "plate must be at least 3 characters",
+          "param": "vehicle.plate",
+          "location": "body"
+        },
+        {
+          "msg": "capacity must be a number",
+          "param": "vehicle.capacity",
+          "location": "body"
+        },
+        {
+          "msg": "type must be at least 3 characters",
+          "param": "vehicle.type",
+          "location": "body"
+        }
+      ]
+    }
+    ```
+  - **Response Body** (Captain Already Exists):
+    ```json
+    {
+      "success": false,
+      "message": "captain already exists"
+    }
+    ```
+
+- **Status Code**: `500 Internal Server Error`
+  - **Response Body**:
+    ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
